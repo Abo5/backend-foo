@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  movie: one
+  user: one
+  note: MyText
+  time_in: MyString
+  time_out: MyString
+  action: MyString
+
+two:
+  movie: two
+  user: two
+  note: MyText
+  time_in: MyString
+  time_out: MyString
+  action: MyString
