@@ -105,6 +105,7 @@ class MoviesController < ApplicationController
       # إذا أردت أيضًا حقل poster_file يمكن إضافته بنفس القيمة:
       response['poster_file'] = movie.poster.blob.key
     end
+    response['film_notes_count'] = movie.film_notes.count
     response
   end
   
