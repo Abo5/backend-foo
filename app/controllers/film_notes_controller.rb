@@ -1,6 +1,6 @@
 class FilmNotesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_movie, only: [:index, :create, :add_by_post]  # أضف :add_by_post هنا
+  # before_action :authenticate_user!
+  before_action :set_movie, only: [:index, :create, :add_by_post, :update, :destroy]
   before_action :set_film_note, only: [:update, :destroy]
   
   def index
@@ -35,20 +35,42 @@ class FilmNotesController < ApplicationController
   end
 
   def update
-    if @film_note.user == current_user && @film_note.update(film_note_params)
+    film_note_id = params.dig(:film_note, :id)
+    unless film_note_id.present?
+      render json: { error: "Film note id not provided" }, status: :unprocessable_entity and return
+    end
+  
+    @film_note = @movie.film_notes.find_by(id: film_note_id, user: current_user)
+    unless @film_note
+      render json: { error: "Film note not found" }, status: :not_found and return
+    end
+  
+    if @film_note.update(film_note_params)
       render json: { message: "Note updated successfully", film_note: @film_note }
     else
       render json: { errors: @film_note.errors.full_messages }, status: :unprocessable_entity
     end
   end
-
+  
   def destroy
-    if @film_note.user == current_user && @film_note.destroy
+    film_note_id = params.dig(:film_note, :id)
+    unless film_note_id.present?
+      render json: { error: "Film note id not provided" }, status: :unprocessable_entity and return
+    end
+  
+    @film_note = @movie.film_notes.find_by(id: film_note_id, user: current_user)
+    unless @film_note
+      render json: { error: "Film note not found" }, status: :not_found and return
+    end
+  
+    if @film_note.destroy
       render json: { message: "Note deleted successfully" }
     else
       render json: { errors: "Unable to delete note" }, status: :unprocessable_entity
     end
   end
+  
+  
 
   private
 
