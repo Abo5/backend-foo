@@ -1,6 +1,6 @@
 class MoviesController < ApplicationController
   include AuthenticationTokenCookie
-  before_action :check_token_cookie, only: [:index, :show, :create]
+  # before_action :check_token_cookie, only: [:index, :show, :create]
   before_action :set_movie, only: [:show, :update, :destroy]
 
   # GET /movies
