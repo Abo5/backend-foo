@@ -34,8 +34,8 @@ Rails.application.routes.draw do
   get 'image/:uuid', to: 'images#show'
   resources :film_notes, only: [:create, :update, :destroy, :index]
   get '/film_notes/movie/:movie_uuid', to: 'film_notes#index'
-  post '/film_notes/update', to: 'film_notes#update'
-  post '/film_notes/delete', to: 'film_notes#destroy'  
+  post '/film_notes/:movie_uuid/update', to: 'film_notes#update'
+  post '/film_notes/:movie_uuid/delete', to: 'film_notes#destroy'  
 
   get '/movie_details/:uuid', to: 'movie_details#show'
 
