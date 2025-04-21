@@ -1,5 +1,5 @@
 class GenresController < ApplicationController
-    before_action :authenticate_user!
+    # before_action :authenticate_user!
   
     # GET /genres
     def index
