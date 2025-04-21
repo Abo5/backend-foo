@@ -1,7 +1,7 @@
 # app/controllers/movie_details_controller.rb
 class MovieDetailsController < ApplicationController
     include AuthenticationTokenCookie
-    before_action :authenticate_user!
+    # before_action :authenticate_user!
     before_action :set_movie
   
     # GET /movie_details/:uuid
