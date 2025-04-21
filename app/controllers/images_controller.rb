@@ -2,6 +2,8 @@ class ImagesController < ApplicationController
     # السماح بعرض الصور بدون التحقق من التوكن
     skip_before_action :check_token_cookie
     skip_before_action :ensure_jwt_present
+    skip_before_action :authenticate_request
+
   
     def show
       # البحث باستخدام المفتاح (key) بدلاً من البحث بواسطة uuid للفيلم
