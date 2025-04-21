@@ -1,5 +1,5 @@
 class FilmRatingsController < ApplicationController
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
 
   # الإجراء التقليدي (POST /film_ratings) موجود كما هو
   def create
