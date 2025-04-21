@@ -1,5 +1,5 @@
 class MovieActorsController < ApplicationController
-    before_action :authenticate_user!
+    # before_action :authenticate_user!
   
     # POST /movie_actors
     def create
