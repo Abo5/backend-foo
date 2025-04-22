@@ -41,8 +41,8 @@ class Movie < ApplicationRecord
   end
 
   def poster_presence
-    unless poster.attached? || (poster_url.present? && poster_url =~ /\Ahttps?:\/\/.*\.(jpg|jpeg|png)\z/i)
+    if poster.attachment.nil? && (poster_url.blank? || poster_url !~ /\Ahttps?:\/\/.*\.(jpg|jpeg|png)\z/i)
       errors.add(:base, "You must provide either an attached poster image or a valid poster URL (e.g., http://example.com/image.jpg)")
     end
-  end
+  end  
 end
