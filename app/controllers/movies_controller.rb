@@ -8,7 +8,6 @@ class MoviesController < ApplicationController
     @movies = Movie.where(added_by_user_uuid: current_user.uuid)
     render json: @movies.map { |movie| movie_response(movie) }
   end
-  
 
   # GET /movies/:uuid
   def show
@@ -17,17 +16,17 @@ class MoviesController < ApplicationController
 
   # POST /movies
   def create
-    @movie = Movie.new(movie_params.except(:poster_file))
-    # تعيين معرف المستخدم الذي قام بإنشاء الفيلم
+    movie_attrs = movie_params.except(:poster_file)
+    movie_attrs[:runtime] = normalize_runtime(movie_attrs[:runtime])
+
+    @movie = Movie.new(movie_attrs)
     @movie.added_by_user_uuid = current_user.uuid
-  
+
     if params[:movie][:poster_file].present?
-      # إرفاق الملف قبل حفظ السجل حتى يتم استيفاء شرط التحقق
       @movie.poster.attach(params[:movie][:poster_file])
     end
-  
+
     if @movie.save
-      # تحديث poster_url إذا تم رفع الملف
       if @movie.poster.attached?
         @movie.update(poster_url: @movie.poster.blob.key)
       end
@@ -39,13 +38,12 @@ class MoviesController < ApplicationController
       render json: { errors: @movie.errors.full_messages }, status: :unprocessable_entity
     end
   end
-  
-  
 
   # POST /movies/:uuid/update
   def update
     movie_attrs = movie_params.except(:poster_file)
-    
+    movie_attrs[:runtime] = normalize_runtime(movie_attrs[:runtime])
+
     if params[:movie][:poster_file].present?
       @movie.poster.purge if @movie.poster.attached?
       @movie.poster.attach(params[:movie][:poster_file])
@@ -100,19 +98,32 @@ class MoviesController < ApplicationController
     response = movie.as_json(except: [:added_by_user_uuid])
     response['added_by_user'] = current_user.username
     if movie.poster.attached?
-      # بدلاً من إعادة مسار التحويل، نعيد مفتاح الصورة مباشرة
       response['poster_url'] = movie.poster.blob.key
-      # إذا أردت أيضًا حقل poster_file يمكن إضافته بنفس القيمة:
       response['poster_file'] = movie.poster.blob.key
     end
     response['film_notes_count'] = movie.film_notes.count
     response
   end
-  
-  
-  
 
-  private
+  def normalize_runtime(runtime_value)
+    str = runtime_value.to_s.strip
+
+    return str if str.match?(/\A\d{2}:\d{2}:\d{2}\z/)
+
+    if str.match?(/\A\d{1,2}:\d{2}\z/)
+      h, m = str.split(":").map(&:to_i)
+      return "%02d:%02d:00" % [h, m]
+    end
+
+    if str.match?(/\A\d+\z/)
+      total_minutes = str.to_i
+      hours = total_minutes / 60
+      minutes = total_minutes % 60
+      return "%02d:%02d:00" % [hours, minutes]
+    end
+
+    str
+  end
 
   def check_token_cookie
     unless verify_token_cookie_match
