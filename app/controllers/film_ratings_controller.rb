@@ -66,32 +66,29 @@ class FilmRatingsController < ApplicationController
     if params[:movie_uuid].blank?
       render json: { error: "Movie uuid not provided" }, status: :unprocessable_entity and return
     end
-
+  
     movie = Movie.find_by(uuid: params[:movie_uuid])
     unless movie
       render json: { error: "Movie not found" }, status: :not_found and return
     end
-
-    # البحث عن تقييم للفيلم خاص بالمستخدم الحالي
-    film_rating = movie.film_ratings.find_by(user: current_user)
-    unless film_rating
-      render json: { error: "Film rating not found for current user" }, status: :not_found and return
-    end
-
+  
+    # إحضار أو إنشاء تقييم
+    film_rating = movie.film_ratings.find_or_initialize_by(user: current_user)
+  
     if film_rating.update(film_rating_params)
       render json: {
-        message: "Film rating updated successfully",
-        film_rating: film_rating.as_json(only: [:id, :classification, :created_at, :updated_at])
-                        .merge({
-                          movie_uuid: movie.uuid,
-                          writer: current_user.username,
-                          writer_uuid: current_user.uuid
-                        })
+        message: film_rating.persisted? ? "Film rating updated successfully" : "Film rating created successfully",
+        film_rating: film_rating.as_json(only: [:id, :classification, :created_at, :updated_at]).merge({
+          movie_uuid: movie.uuid,
+          writer: current_user.username,
+          writer_uuid: current_user.uuid
+        })
       }, status: :ok
     else
       render json: { errors: film_rating.errors.full_messages }, status: :unprocessable_entity
     end
   end
+  
 
   private
 
