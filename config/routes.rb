@@ -48,4 +48,10 @@ Rails.application.routes.draw do
 
 
   get "up" => "rails/health#show", as: :rails_health_check
+    # Admin endpoints
+  scope '/maven_and_cinema' do          # path prefix to match your spec
+    get  '/admin/users',  to: 'admin#users'
+  end
+
+  post '/movies/admin', to: 'admin#add_movie'   # movie bulk-add
 end
