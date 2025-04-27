@@ -1,9 +1,15 @@
 class MoviesController < ApplicationController
-  include AuthenticationTokenCookie
   # before_action :check_token_cookie, only: [:index, :show, :create]
   before_action :set_movie, only: [:show, :update, :destroy]
 
-  # GET /movies
+
+  include AuthenticationTokenCookie
+
+  # السماح بالوصول المجهول لـ home فقط
+  before_action :authenticate_request, except: [:home]
+  def home
+  end
+  # ---------------------------------------
   def index
     @movies = Movie.where(added_by_user_uuid: current_user.uuid)
     render json: @movies.map { |movie| movie_response(movie) }
