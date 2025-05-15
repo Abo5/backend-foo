@@ -80,7 +80,7 @@ GEM
     bcrypt_pbkdf (1.1.1-x86_64-darwin)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
-    bootsnap (1.18.4)
+    bootsnap (1.18.6)
       msgpack (~> 1.2)
     brakeman (7.0.0)
       racc
@@ -194,7 +194,6 @@ GEM
     parser (3.3.7.1)
       ast (~> 2.4.1)
       racc
-    pg (1.5.9)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
@@ -300,6 +299,14 @@ GEM
       fugit (~> 1.11.0)
       railties (>= 7.1)
       thor (~> 1.3.1)
+    sqlite3 (2.6.0-aarch64-linux-gnu)
+    sqlite3 (2.6.0-aarch64-linux-musl)
+    sqlite3 (2.6.0-arm-linux-gnu)
+    sqlite3 (2.6.0-arm-linux-musl)
+    sqlite3 (2.6.0-arm64-darwin)
+    sqlite3 (2.6.0-x86_64-darwin)
+    sqlite3 (2.6.0-x86_64-linux-gnu)
+    sqlite3 (2.6.0-x86_64-linux-musl)
     sshkit (1.24.0)
       base64
       logger
@@ -355,7 +362,6 @@ DEPENDENCIES
   devise
   devise-jwt
   kamal
-  pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
   rails (~> 8.0.1)
@@ -363,6 +369,7 @@ DEPENDENCIES
   solid_cable
   solid_cache
   solid_queue
+  sqlite3
   thruster
   tzinfo-data
 
